@@ -16,7 +16,7 @@ CB_STATEMeleeScript::CB_STATEMeleeScript()
 	, m_bSpawnCircleSpell(false)
 	, m_AOE_Circle(nullptr)
 	, m_bStorePlayerPos(false)
-	, m_fCurForce(20.f)
+	, m_fCurForce(35.f)
 	, m_AOE_Fog(nullptr)
 	, m_bSpawnFog(false)
 {
@@ -67,7 +67,7 @@ void CB_STATEMeleeScript::begin()
 	//m_BHQ->Animator3D()->StartEvent(B_Melee_Evade_F) = std::bind(&CB_STATEMeleeScript::Evade_MoveZero, this);
 	m_BHQ->Animator3D()->ActionEvent(B_Melee_Evade_F, 1) = std::bind(&CB_STATEMeleeScript::Evade_MoveZero, this); // 48이 끝 
 	m_BHQ->Animator3D()->ActionEvent(B_Melee_Evade_F, 8) = std::bind(&CB_STATEMeleeScript::Evade_MoveRestore, this); // 8
-	m_BHQ->Animator3D()->ActionEvent(B_Melee_Evade_F, 25) = std::bind(&CB_STATEMeleeScript::Evade_MoveZero, this); 
+	m_BHQ->Animator3D()->ActionEvent(B_Melee_Evade_F, 28) = std::bind(&CB_STATEMeleeScript::Evade_MoveZero, this); 
 	
 
 
@@ -318,6 +318,7 @@ void CB_STATEMeleeScript::AOE_End()
 {
 
 	m_BHQ->SetPlaying(false);
+	m_bSpawnCircleSpell = false;
 
 	if (DistCheck()) // 플레이어가 근처에 있다면
 	{
@@ -425,65 +426,73 @@ void CB_STATEMeleeScript::SpawnSpell()
 		m_bSpawnCircleSpell = true;
 	}
 
+	if (nullptr != m_AOE_Circle)
+	{
+
 		tParticleModule ModuleData = m_AOE_Circle->ParticleSystem()->GetModuleData();
 		ModuleData.ModuleCheck[(UINT)PARTICLE_MODULE::DRAG] = true;
 		ModuleData.ModuleCheck[(UINT)PARTICLE_MODULE::GRAVITY] = false;
 		ModuleData.bDead = false;
 		m_AOE_Circle->ParticleSystem()->SetModuleData(ModuleData);
 
+	}
 }
 
 
 
 void CB_STATEMeleeScript::SpawnSpellGravity()
 {
+	if (nullptr != m_AOE_Circle)
+	{
+		tParticleModule ModuleData = m_AOE_Circle->ParticleSystem()->GetModuleData();
+		ModuleData.bDead = true;
+		m_AOE_Circle->ParticleSystem()->SetModuleData(ModuleData);
+	}
 
-	tParticleModule ModuleData  = m_AOE_Circle->ParticleSystem()->GetModuleData();
-	ModuleData.ModuleCheck[(UINT)PARTICLE_MODULE::DRAG] = false;
-	ModuleData.ModuleCheck[(UINT)PARTICLE_MODULE::GRAVITY] = true;
-	ModuleData.fGravityForce = 6500.f;
-
-	m_AOE_Circle->ParticleSystem()->SetModuleData(ModuleData);
-	
 
 }
 
 
 void CB_STATEMeleeScript::SpawnSpellOff()
 {
-	tParticleModule ModuleData = m_AOE_Circle->ParticleSystem()->GetModuleData();
-	ModuleData.bDead = true;
 
-
-	ModuleData.ModuleCheck[(UINT)PARTICLE_MODULE::DRAG] = true;
-	ModuleData.ModuleCheck[(UINT)PARTICLE_MODULE::GRAVITY] = false;
-	m_AOE_Circle->ParticleSystem()->SetModuleData(ModuleData);
-
-
-
-	Vec3 BossPos = m_BHQ->GetOwner()->Transform()->GetRelativePos();
-	Vec3 PlayerPos = GetPlayerPos();
-
-
-	// 이미 한번 생성했다면 객체 생성 x 
-	if (nullptr == m_AOE_Fog && !m_bSpawnFog)
+	if (nullptr != m_AOE_Circle)
 	{
-		Ptr<CPrefab> fab = CResMgr::GetInst()->Load<CPrefab>(L"prefab\\Circle_FOG.pref", L"prefab\\Circle_FOG.pref");
-		fab->PrefabLoad(L"prefab\\Circle_FOG.pref");
 
-		//==== spawn Object함수랑 cloneObj함수랑 위치 값 똑같이 해주기 
-		m_AOE_Fog = fab.Get()->Instantiate(Vec3(PlayerPos), 2);
-	
+		tParticleModule ModuleData = m_AOE_Circle->ParticleSystem()->GetModuleData();
+		ModuleData.bDead = true;
 
-		tParticleModule ModuleData = m_AOE_Fog->ParticleSystem()->GetModuleData();
-		ModuleData.bDead = false;
-		m_AOE_Fog->ParticleSystem()->SetModuleData(ModuleData);
 
-		SpawnGameObject(m_AOE_Fog, Vec3(PlayerPos), L"Effect");
-		m_AOE_Fog->SetName(L"AOE_FOG	");
+		ModuleData.ModuleCheck[(UINT)PARTICLE_MODULE::DRAG] = true;
+		ModuleData.ModuleCheck[(UINT)PARTICLE_MODULE::GRAVITY] = false;
+		m_AOE_Circle->ParticleSystem()->SetModuleData(ModuleData);
 
-		m_bSpawnFog = true;
+
+
+		Vec3 BossPos = m_BHQ->GetOwner()->Transform()->GetRelativePos();
+		Vec3 PlayerPos = GetPlayerPos();
+
 	}
+
+	//// 이미 한번 생성했다면 객체 생성 x 
+	//if (nullptr == m_AOE_Fog && !m_bSpawnFog)
+	//{
+	//	Ptr<CPrefab> fab = CResMgr::GetInst()->Load<CPrefab>(L"prefab\\Circle_FOG.pref", L"prefab\\Circle_FOG.pref");
+	//	fab->PrefabLoad(L"prefab\\Circle_FOG.pref");
+
+	//	//==== spawn Object함수랑 cloneObj함수랑 위치 값 똑같이 해주기 
+	//	m_AOE_Fog = fab.Get()->Instantiate(Vec3(PlayerPos), 2);
+	//
+
+	//	tParticleModule ModuleData = m_AOE_Fog->ParticleSystem()->GetModuleData();
+	//	ModuleData.bDead = false;
+	//	m_AOE_Fog->ParticleSystem()->SetModuleData(ModuleData);
+
+	//	SpawnGameObject(m_AOE_Fog, Vec3(PlayerPos), L"Effect");
+	//	m_AOE_Fog->SetName(L"AOE_FOG	");
+
+	//	m_bSpawnFog = true;
+	//}
 
 
 }
@@ -494,9 +503,6 @@ void CB_STATEMeleeScript::EvadeEnd()
 	m_BHQ->SetPlaying(false);
 	m_bStorePlayerPos = false; // Move Evade를 할 때 플레이어 위치를 저장하는 시점을 조정하기 위한 변수
 
-
-	if (DistCheck()) // 플레이어가 근처에 있다면
-	{
 		int RandomNum = ZeroToOneRandom();
 
 		if (RandomNum == 0)
@@ -504,12 +510,6 @@ void CB_STATEMeleeScript::EvadeEnd()
 
 		else if (RandomNum == 1)
 			m_BHQ->SetStance_Weapon(CB_FSMScript::eBossStance_Weapon::AOE);
-	}
-
-	else
-	{
-		m_BHQ->ChangeState(static_cast<UINT>(eB_States::MOVE));
-	}
 
 }
 
@@ -520,7 +520,7 @@ void CB_STATEMeleeScript::Evade_MoveZero()
 
 void CB_STATEMeleeScript::Evade_MoveRestore()
 {
-	m_fCurForce = 20.f;
+	m_fCurForce = 35.f;
 }
 
 int CB_STATEMeleeScript::ZeroToOneRandom()

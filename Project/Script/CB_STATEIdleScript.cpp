@@ -49,15 +49,9 @@ void CB_STATEIdleScript::tick()
 
 	//m_pTest->ParticleSystem()->isFinish(); // 이 함수를 쓰면 시간초가 지나고 파티클이 spawn이 끝난 시점을 갖고 올 수 있음. 
 
-	if (KEY_TAP(KEY::_5)) // 플레이어가 충돌체에 부딪치면 그 때 move로 전환한다. 라고 나중에 바꿀 것임 (충돌체 이벤트 함수 쪽에서) 
-	{
-		m_BHQ->ChangeState(static_cast<UINT>(eB_States::MOVE));
-
-	}
-
 	float dist = DistBetwPlayer();
-	//if (dist < 2000.f) // 
-	//	m_BHQ->ChangeState(static_cast<UINT>(eB_States::MOVE));
+	if (dist < 1564.f) // 
+		m_BHQ->ChangeState(static_cast<UINT>(eB_States::MOVE));
 
 }
 

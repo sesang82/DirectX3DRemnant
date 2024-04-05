@@ -1281,11 +1281,11 @@ void CB_STATEMoveScript::CatchCheck() // move에서 근접 공격 state로 넘어가는 함�
 			{
 				case CB_FSMScript::eBossStance_Weapon::FAST_WALK:
 				{
-					if (DistBetwPlayer() > 800.f)
+				/*	if (DistBetwPlayer() > 800.f)
 					{
 						m_CMoveScript->SetNearPlayer(false);
-					}
-					else if (DistBetwPlayer() >= 500.f && DistBetwPlayer() <= 800.f) // ** 이 수치는 좀 생각해보기 
+					}*/
+					if (DistBetwPlayer() >= 500.f && DistBetwPlayer() <= 800.f) // ** 이 수치는 좀 생각해보기 
 					{
 						m_BHQ->SetStance_Weapon(CB_FSMScript::eBossStance_Weapon::EVADE);
 					}
@@ -1293,6 +1293,11 @@ void CB_STATEMoveScript::CatchCheck() // move에서 근접 공격 state로 넘어가는 함�
 					else if (DistBetwPlayer() < 250.f) // ** 250
 					{
 						m_BHQ->SetStance_Weapon(CB_FSMScript::eBossStance_Weapon::MELEE_ATK);
+					}
+					
+					else  // ** 이 수치는 좀 생각해보기 
+					{
+						m_CMoveScript->SetNearPlayer(false);
 					}
 				} 
 				break;
