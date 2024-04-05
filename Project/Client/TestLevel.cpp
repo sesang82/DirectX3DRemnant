@@ -998,18 +998,18 @@ void CreateTestLevel()
 			obj->SetLayerIdx((UINT)LAYER_TYPE::Monster);
 
 
-			SpawnGameObject(obj, Vec3(-1143.f, 0.f, 3338.f), (UINT)LAYER_TYPE::Monster);
+			SpawnGameObject(obj, Vec3(1271.f, 0.f, 3338.f), (UINT)LAYER_TYPE::Monster);
 		}
 		{
 			Ptr<CPrefab> fab = CResMgr::GetInst()->Load<CPrefab>(L"prefab\\Monster_Spider.pref", L"prefab\\Monster_Spider.pref");
 			fab->PrefabLoad(L"prefab\\Monster_Spider.pref");
-			CGameObject* obj = fab->Instantiate(Vec3(-46.f, 0.f, 3338.f), (UINT)LAYER_TYPE::Monster);
+			CGameObject* obj = fab->Instantiate(Vec3(-1442.000f, 0.f, 3338.f), (UINT)LAYER_TYPE::Monster);
 			fab->FabClear();
 			obj->SetName(L"Spider");
 			obj->SetLayerIdx((UINT)LAYER_TYPE::Monster);
 
 
-			SpawnGameObject(obj, Vec3(-46.f, 0.f, 3338.f), (UINT)LAYER_TYPE::Monster);
+			SpawnGameObject(obj, Vec3(-1442.000f, 0.f, 3338.f), (UINT)LAYER_TYPE::Monster);
 		}
 		{
 			Ptr<CPrefab> fab = CResMgr::GetInst()->Load<CPrefab>(L"prefab\\Monster_Spider.pref", L"prefab\\Monster_Spider.pref");
@@ -1023,4 +1023,81 @@ void CreateTestLevel()
 			SpawnGameObject(obj, Vec3(1245.f, 0.f, -844.f), (UINT)LAYER_TYPE::Monster);
 		}
 	}
+
+
+
+	// 보스 
+	{
+		Ptr<CPrefab> fab = CResMgr::GetInst()->Load<CPrefab>(L"prefab\\Boss.pref", L"prefab\\Boss.pref");
+		fab->PrefabLoad(L"prefab\\Boss.pref");
+		CGameObject* obj = fab->Instantiate(Vec3(1245.f, 0.f, -844.f), (UINT)LAYER_TYPE::Monster);
+		fab->FabClear();
+		obj->SetName(L"Boss");
+		obj->SetLayerIdx((UINT)LAYER_TYPE::Monster);
+
+
+		SpawnGameObject(obj, Vec3(119.f, 0.f, 3324.f), (UINT)LAYER_TYPE::Monster);
+	}
+
+
+
+	//// Wasteland_Undying_Melee_Idle
+	//{
+	//	Ptr<CMeshData> pMeshData = nullptr;
+	//	CGameObject* player = nullptr;
+
+	//	// 인스턴싱 테스트
+	//	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\Wasteland_Undying_Melee_Idle.mdat");
+	//	player = pMeshData->Instantiate();
+	//	player->AddComponent(new CB_FSMScript);
+	//	player->AddComponent(new CHitBoxScript);
+	//	player->AddComponent(new CPathFinderScript());
+	//	player->AddComponent(new CMonsterMoveScript);
+	//	player->SetName(L"Boss");
+
+
+
+	//	// rigidbody 추가하기 위한 준비눌
+	//	// 1. 스폰시킬 위치
+
+	//	player->Transform()->SetRelativePos(Vec3(-14.000, 0, 3345.000)); // spawn 함수에서 쓰느 ㄴ위치랑 똑같아야함
+
+	//	// 2. 레이어 세팅
+	//	player->SetLayerIdx((UINT)LAYER_TYPE::Monster);
+
+	//	player->AddComponent(new CRigidBody);
+
+	//	// 3. 쉐잎 ㅊ가
+
+	//	// 발목 (사이즈 그냥 작게 고정시켜놓기) 
+	//	tShapeInfo info{};
+	//	info.eGeomType = GEOMETRY_TYPE::Sphere;
+	//	info.size = Vector3(100.f, 0.f, 100.f); // 사이즈는 수동으로 조절
+	//	info.CollideType = (UINT)COLLIDE_TYPE::Monster;
+	//	info.offset = Vec3(0.f, 30.f, 0.f);
+	//	player->RigidBody()->PushBackShapeInfo(info);
+	//	info.eGeomType = GEOMETRY_TYPE::Sphere;
+	//	info.CollideType = (UINT)COLLIDE_TYPE::Monster;
+	//	info.size = Vector3(100.f, 100.f, 200.f); // 사이즈는 수동으로 조절
+	//	player->RigidBody()->PushBackShapeInfo(info);
+	//	info.eGeomType = GEOMETRY_TYPE::Sphere;
+	//	info.CollideType = (UINT)COLLIDE_TYPE::Monster;
+	//	info.size = Vector3(200.f, 200.f, 200.f); // 사이즈는 수동으로 조절
+	//	player->RigidBody()->PushBackShapeInfo(info);
+
+	//	// 2번째로 더 만들고싶다면.. 
+	//	//info.eGeomType = GEOMETRY_TYPE::Sphere; 이 함수부터 pushback 함수까지 반복 
+
+	//	// 4. 
+	//	player->RigidBody()->SetPhysical(ACTOR_TYPE::Kinematic);
+	//	player->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Y, true);
+	//	player->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_X, true);
+	//	player->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Z, true);
+	//	player->RigidBody()->GetRigidBody()->setRigidBodyFlag(PxRigidBodyFlag::eENABLE_CCD, true);
+
+	//	SpawnGameObject(player, Vec3(119.000, 0, 3345.000), (UINT)LAYER_TYPE::Monster);
+
+	//}
+
+
 }

@@ -55,7 +55,7 @@ void CB_STATEIdleScript::tick()
 
 	}
 
-	//float dist = DistBetwPlayer();
+	float dist = DistBetwPlayer();
 	//if (dist < 2000.f) // 
 	//	m_BHQ->ChangeState(static_cast<UINT>(eB_States::MOVE));
 
